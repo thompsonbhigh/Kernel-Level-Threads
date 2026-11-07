@@ -201,7 +201,7 @@ void fun3()
     Console::puts("\n");
     Console::puts("FUN 3 INVOKED!\n");
 
-    for (int j = 0; j < 10; j++)
+    for (int j = 0; j < 100; j++)
     {
         Console::puts("FUN 3 IN BURST[");
         Console::puti(j);
@@ -223,7 +223,7 @@ void fun4()
     Console::puts("\n");
     Console::puts("FUN 4 INVOKED!\n");
 
-    for (int j = 0; j < 10; j++)
+    for (int j = 0; j < 100; j++)
     {
         Console::puts("FUN 4 IN BURST[");
         Console::puti(j);

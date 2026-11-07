@@ -21,6 +21,7 @@
 #include "console.H"
 #include "utils.H"
 #include "assert.H"
+#include "machine.H"
 
 /*--------------------------------------------------------------------------*/
 /* DATA STRUCTURES */
@@ -90,6 +91,7 @@ Scheduler::Scheduler()
 void Scheduler::yield()
 {
     /* Zombie Reaper */
+    Machine::disable_interrupts();
     while (zombie_head)
     {
         Thread *next_zombie = zombie_head->next;
@@ -103,6 +105,7 @@ void Scheduler::yield()
 
     if (Thread::CurrentThread() == head && !head->next) /* If idle thread is running and queue is empty (only idle thread) */
     {
+        Machine::enable_interrupts();
         return;
     }
     else if (head == tail) /* Only idle thread in queue */
@@ -121,8 +124,11 @@ void Scheduler::yield()
         head->next = nullptr;
         tail->prev = nullptr;
 
-        if (next_thread == Thread::CurrentThread())
+        if (next_thread == Thread::CurrentThread()) 
+       {
+            Machine::enable_interrupts();
             return;
+        }
 
         current_thread = next_thread;
         Thread::dispatch_to(next_thread);
@@ -139,12 +145,15 @@ void Scheduler::yield()
         current_thread = next_thread;
         Thread::dispatch_to(next_thread);
     }
+    Machine::enable_interrupts();
+
     assert(true);
     Console::puts("Thread yielded.\n");
 }
 
 void Scheduler::resume(Thread *_thread)
 {
+    Machine::disable_interrupts();
     if (tail == head) /* if only idle thread is present */
     {
         tail = _thread;
@@ -160,6 +169,7 @@ void Scheduler::resume(Thread *_thread)
         tail = _thread;
         tail->next = nullptr;
     }
+    Machine::enable_interrupts();
 
     assert(true);
     Console::puts("Thread resumed.\n");
