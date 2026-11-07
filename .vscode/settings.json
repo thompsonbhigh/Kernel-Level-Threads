@@ -1,0 +1,7 @@
+{
+  "C_Cpp.intelliSenseEngine": "default",
+  "files.associations": {
+    "*.C": "cpp",
+    "*.H": "cpp"
+  }
+}

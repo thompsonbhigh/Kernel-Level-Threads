@@ -1,0 +1,32 @@
+x86 context switcher module
+    - add scheduler
+
+building scheduler for kernel level threads
+
+change thread management code so that it can handle thread termination/return
+    - release CPU, release memory, give control to next thread, etc...
+    - return from interrupt handler before context switch if in an interrupt
+
+Scheduler()
+    - ready queue of thread objects
+    - may want pointer to currently running thread
+    - may want end of quantum handler in round-robin implementation
+
+Scheduler yield()
+    - can only be called by currently running thread
+    - gives up CPU, after figuring out who is next thread, then remove new thread from ready queue and dispatch to it
+    - put self at end of ready queue, look at who is at front of ready queue, remove that thread from ready queue, and dispatch to it
+    - good idea to have idle thread so that yielding thread does not context switch to itself
+    - idle thread only calls yield()
+
+Scheduler resume()
+    - thread has been blocked and wants to resume execution
+    - just puts on ready queue
+
+end of quantum handler
+    - at end of quantum, resume() current thread to add to ready queue, then yield()
+
+Scheduler terminate()
+    - check if thread is running before removing it from ready queue and allowing it to be terminated
+    - give control to next thread, then destroy thread
+
